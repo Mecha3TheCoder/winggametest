@@ -1,0 +1,174 @@
+[gd_scene load_steps=7 format=3 uid="uid://ly1f1ba2gvfs"]
+
+[ext_resource type="PackedScene" uid="uid://doc1n5yx0qbb1" path="res://player.tscn" id="1_akw4h"]
+[ext_resource type="PackedScene" uid="uid://bqnpdof86ecng" path="res://player2.tscn" id="2_ry4x1"]
+[ext_resource type="PackedScene" uid="uid://v2pk0pvle35e" path="res://level.tscn" id="3_enuh4"]
+[ext_resource type="Script" path="res://spawn_logic.gd" id="4_fv2ud"]
+
+[sub_resource type="GDScript" id="GDScript_2hl00"]
+script/source = "extends Node2D
+
+var peer = ENetMultiplayerPeer.new()
+@export var player_scene: PackedScene
+@export var player2_scene: PackedScene
+#const LEVEL1 = preload(\"res://level.tscn\")
+#@onready var old_level = $Levels/level
+
+
+func _ready() -> void:
+	print(get_multiplayer_authority())
+	self.set_multiplayer_authority(1)
+	$Control.show()
+	$Levels.hide()
+
+
+func _add_player(id = 1):
+	var player = player_scene.instantiate()
+	player.name = str(id)
+	call_deferred(\"add_child\", player)
+
+
+func _add_player2(id = 2):
+	var player = player2_scene.instantiate()
+	player.name = str(id)
+	#if player.has_signal(\"new_level\"):
+		##player.new_level.connect(_on_new_level)
+		#player.connect(\"new_level\", Callable(self, \"_on_new_level\"))
+		#print(player.has_signal(\"new_level\"))
+		#print(is_connected(\"new_level\", _on_new_level))
+	#else:
+		#print(\"no signal found\")
+	#player.new_level.connect(_on_new_level.bind([LEVEL1, LEVEL1]))
+	call_deferred(\"add_child\", player)
+	$Control.hide()
+
+
+func _on_button_pressed() -> void:
+	peer.create_server(135)
+	multiplayer.multiplayer_peer = peer
+	multiplayer.peer_connected.connect(_add_player2)
+	_add_player()
+	$Control.hide()
+	$Levels.show()
+
+
+func _on_button_2_pressed() -> void:
+	peer.create_client(\"localhost\", 135)
+	multiplayer.multiplayer_peer = peer
+	$Control.hide()
+	$Levels.show()
+
+
+#func _input(event: InputEvent) -> void:
+	#if event.is_action_pressed(\"e\"):
+		#spawn_level.rpc()
+#
+#
+#@rpc(\"any_peer\", \"call_local\")
+#func spawn_level():
+	#print(\"worked\")
+	#var new_level = LEVEL1.instantiate()
+	##new_level.get_node(\"start\").global_position = old_level.get_node(\"end\").global_position
+	#new_level.global_position = old_level.get_node(\"end\").global_position
+	##$Levels.call_deferred(\"add_child\", new_level)
+	#$Levels.add_child(new_level, true)
+	##$Levels/MultiplayerSpawner3.spawn(new_level)
+	#old_level = new_level
+
+
+#func _input(event: InputEvent) -> void:
+	#if event.is_action_pressed(\"e\"):
+		#var new_level = LEVEL1.instantiate()
+		##new_level.get_node(\"start\").global_position = old_level.get_node(\"end\").global_position
+		#new_level.global_position = old_level.get_node(\"end\").global_position
+		##$Levels.call_deferred(\"add_child\", new_level)
+		#$Levels.add_child(new_level, true)
+		##$Levels/MultiplayerSpawner3.spawn(new_level)
+		#old_level = new_level
+
+
+#func _on_new_level():
+	#print(\"new level time baby\")
+	#var next_level = LEVEL1.instantiate()
+	#@warning_ignore(\"standalone_expression\")
+	#next_level.global_position
+	#call_deferred(\"add_child\", next_level)
+
+
+#func _on_button_pressed() -> void:
+	#peer.create_server(135)
+	#multiplayer.multiplayer_peer = peer
+	#multiplayer.peer_connected.connect(_add_player)
+	#_add_player()
+	#
+#
+#
+#func _on_button_2_pressed() -> void:
+	#peer.create_client(\"localhost\", 135)
+	#multiplayer.multiplayer_peer = peer
+#
+#
+#func _add_player(id = 1):
+	#var player = player_scene.instantiate()
+	#player.name = str(id)
+"
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_bbect"]
+
+[node name="Game" type="Node2D"]
+script = SubResource("GDScript_2hl00")
+player_scene = ExtResource("1_akw4h")
+player2_scene = ExtResource("2_ry4x1")
+
+[node name="SpawnLogic" type="Node" parent="."]
+script = ExtResource("4_fv2ud")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Button" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 150.0
+offset_top = 102.0
+offset_right = 194.0
+offset_bottom = 133.0
+scale = Vector2(4, 4)
+text = "Host"
+
+[node name="Button2" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 161.0
+offset_top = 299.0
+offset_right = 199.0
+offset_bottom = 330.0
+scale = Vector2(4, 4)
+text = "Join
+"
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_bbect")
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://player.tscn")
+spawn_path = NodePath("..")
+spawn_limit = 1
+
+[node name="MultiplayerSpawner2" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://player2.tscn")
+spawn_path = NodePath("..")
+spawn_limit = 1
+
+[node name="Levels" type="Node2D" parent="."]
+
+[node name="MultiplayerSpawner3" type="MultiplayerSpawner" parent="Levels"]
+_spawnable_scenes = PackedStringArray("res://level.tscn")
+spawn_path = NodePath("..")
+
+[node name="level" parent="Levels" instance=ExtResource("3_enuh4")]
+position = Vector2(-580, 226)
+
+[connection signal="pressed" from="Control/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="Control/Button2" to="." method="_on_button_2_pressed"]
