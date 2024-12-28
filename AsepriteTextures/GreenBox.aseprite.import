@@ -1,0 +1,16 @@
+[remap]
+
+importer="aseprite_wizard.plugin.static-texture"
+type="AtlasTexture"
+uid="uid://g54l172bud04"
+path="res://.godot/imported/GreenBox.aseprite-0b6bc08be4835595e56efe5712ed2287.res"
+
+[deps]
+
+source_file="res://AsepriteTextures/GreenBox.aseprite"
+dest_files=["res://.godot/imported/GreenBox.aseprite-0b6bc08be4835595e56efe5712ed2287.res"]
+
+[params]
+
+exclude_layers_pattern=""
+only_visible_layers=true

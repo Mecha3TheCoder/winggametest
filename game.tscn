@@ -1,33 +1,63 @@
-[gd_scene load_steps=7 format=3 uid="uid://ly1f1ba2gvfs"]
+[gd_scene load_steps=9 format=3 uid="uid://ly1f1ba2gvfs"]
 
-[ext_resource type="PackedScene" uid="uid://doc1n5yx0qbb1" path="res://player.tscn" id="1_akw4h"]
-[ext_resource type="PackedScene" uid="uid://bqnpdof86ecng" path="res://player2.tscn" id="2_ry4x1"]
+[ext_resource type="PackedScene" uid="uid://doc1n5yx0qbb1" path="res://Players/player.tscn" id="1_akw4h"]
+[ext_resource type="PackedScene" uid="uid://bqnpdof86ecng" path="res://Players/player2.tscn" id="2_ry4x1"]
 [ext_resource type="PackedScene" uid="uid://v2pk0pvle35e" path="res://level.tscn" id="3_enuh4"]
+[ext_resource type="PackedScene" uid="uid://cduehqmiukqr1" path="res://main_menu.tscn" id="3_m4lyc"]
 [ext_resource type="Script" path="res://spawn_logic.gd" id="4_fv2ud"]
+[ext_resource type="PackedScene" uid="uid://74f6mmyxxpem" path="res://Levels/starting_level.tscn" id="5_lnvbw"]
 
 [sub_resource type="GDScript" id="GDScript_2hl00"]
 script/source = "extends Node2D
 
 var peer = ENetMultiplayerPeer.new()
+var player_to_add
+
 @export var player_scene: PackedScene
 @export var player2_scene: PackedScene
 #const LEVEL1 = preload(\"res://level.tscn\")
 #@onready var old_level = $Levels/level
 
 
+#Make sure everything is hidden/shown correctly
 func _ready() -> void:
-	print(get_multiplayer_authority())
-	self.set_multiplayer_authority(1)
-	$Control.show()
-	$Levels.hide()
+	#self.set_multiplayer_authority(1)
+	$Control.hide()
+	$Levels.show()
 
 
+#On load from main menu, spawn players
+func _enter_tree() -> void:
+	#match Autoloader.selection:
+		#\"Red\":
+			#player_to_add = player2_scene.instantiate()
+		#
+		#\"Blue\":
+			#player_to_add = player_scene.instantiate()
+	#
+	#print(player_to_add)
+	#add_child(player_to_add)
+	
+	match Autoloader.selection:
+		\"Red\":
+			#making sure to pass client ID, those are 5 hours i'll never get back
+			_add_player2(multiplayer.get_unique_id())
+		
+		\"Blue\":
+			_add_player(multiplayer.get_unique_id())
+		
+	#print(multiplayer.is_server())
+	pass
+
+
+#add cube player
 func _add_player(id = 1):
 	var player = player_scene.instantiate()
 	player.name = str(id)
 	call_deferred(\"add_child\", player)
 
 
+#add master player
 func _add_player2(id = 2):
 	var player = player2_scene.instantiate()
 	player.name = str(id)
@@ -40,23 +70,31 @@ func _add_player2(id = 2):
 		#print(\"no signal found\")
 	#player.new_level.connect(_on_new_level.bind([LEVEL1, LEVEL1]))
 	call_deferred(\"add_child\", player)
-	$Control.hide()
 
 
-func _on_button_pressed() -> void:
-	peer.create_server(135)
-	multiplayer.multiplayer_peer = peer
-	multiplayer.peer_connected.connect(_add_player2)
-	_add_player()
-	$Control.hide()
-	$Levels.show()
+#func _on_main_menu_all_ready() -> void:
+	#match Autoloader.selection:
+		#\"Red\":
+			#_add_player2()
+		#
+		#\"Blue\":
+			#_add_player2()
 
 
-func _on_button_2_pressed() -> void:
-	peer.create_client(\"localhost\", 135)
-	multiplayer.multiplayer_peer = peer
-	$Control.hide()
-	$Levels.show()
+#func _on_button_pressed() -> void:
+	#peer.create_server(135)
+	#multiplayer.multiplayer_peer = peer
+	#multiplayer.peer_connected.connect(_add_player2)
+	#_add_player()
+	#$Control.hide()
+	#$Levels.show()
+#
+#
+#func _on_button_2_pressed() -> void:
+	#peer.create_client(\"localhost\", 135)
+	#multiplayer.multiplayer_peer = peer
+	#$Control.hide()
+	#$Levels.show()
 
 
 #func _input(event: InputEvent) -> void:
@@ -68,22 +106,22 @@ func _on_button_2_pressed() -> void:
 #func spawn_level():
 	#print(\"worked\")
 	#var new_level = LEVEL1.instantiate()
-	##new_level.get_node(\"start\").global_position = old_level.get_node(\"end\").global_position
+	#new_level.get_node(\"start\").global_position = old_level.get_node(\"end\").global_position
 	#new_level.global_position = old_level.get_node(\"end\").global_position
-	##$Levels.call_deferred(\"add_child\", new_level)
+	#$Levels.call_deferred(\"add_child\", new_level)
 	#$Levels.add_child(new_level, true)
-	##$Levels/MultiplayerSpawner3.spawn(new_level)
+	#$Levels/MultiplayerSpawner3.spawn(new_level)
 	#old_level = new_level
 
 
 #func _input(event: InputEvent) -> void:
 	#if event.is_action_pressed(\"e\"):
 		#var new_level = LEVEL1.instantiate()
-		##new_level.get_node(\"start\").global_position = old_level.get_node(\"end\").global_position
+		#new_level.get_node(\"start\").global_position = old_level.get_node(\"end\").global_position
 		#new_level.global_position = old_level.get_node(\"end\").global_position
-		##$Levels.call_deferred(\"add_child\", new_level)
+		#$Levels.call_deferred(\"add_child\", new_level)
 		#$Levels.add_child(new_level, true)
-		##$Levels/MultiplayerSpawner3.spawn(new_level)
+		#$Levels/MultiplayerSpawner3.spawn(new_level)
 		#old_level = new_level
 
 
@@ -120,6 +158,8 @@ script = SubResource("GDScript_2hl00")
 player_scene = ExtResource("1_akw4h")
 player2_scene = ExtResource("2_ry4x1")
 
+[node name="Main Menu" parent="." instance=ExtResource("3_m4lyc")]
+
 [node name="SpawnLogic" type="Node" parent="."]
 script = ExtResource("4_fv2ud")
 
@@ -152,23 +192,24 @@ text = "Join
 replication_config = SubResource("SceneReplicationConfig_bbect")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://player.tscn")
+_spawnable_scenes = PackedStringArray("res://Players/player.tscn")
 spawn_path = NodePath("..")
 spawn_limit = 1
 
 [node name="MultiplayerSpawner2" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://player2.tscn")
+_spawnable_scenes = PackedStringArray("res://Players/player2.tscn")
 spawn_path = NodePath("..")
 spawn_limit = 1
 
-[node name="Levels" type="Node2D" parent="."]
-
-[node name="MultiplayerSpawner3" type="MultiplayerSpawner" parent="Levels"]
-_spawnable_scenes = PackedStringArray("res://level.tscn")
-spawn_path = NodePath("..")
+[node name="Levels" type="Node2D" parent="." groups=["Level"]]
+visible = false
 
 [node name="level" parent="Levels" instance=ExtResource("3_enuh4")]
-position = Vector2(-580, 226)
+visible = false
+position = Vector2(-580, -474)
+
+[node name="Starting Level" parent="Levels" instance=ExtResource("5_lnvbw")]
+position = Vector2(-320, 98)
 
 [connection signal="pressed" from="Control/Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="Control/Button2" to="." method="_on_button_2_pressed"]

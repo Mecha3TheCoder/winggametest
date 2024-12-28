@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=4 uid="uid://74f6mmyxxpem"]
+
+[ext_resource type="Texture2D" uid="uid://cl3nuhbrwmmwb" path="res://icon.svg" id="1_ax0h2"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_y25hu"]
+texture = ExtResource("1_ax0h2")
+texture_region_size = Vector2i(128, 128)
+0:0/next_alternative_id = 2
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, 64, 64, 64, 64, -64, -64, -64)
+0:0/1 = 1
+0:0/1/modulate = Color(1, 1, 1, 0.301961)
+0:0/1/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 64, -64, 64, 64, -64, 64)
+0:0/1/physics_layer_0/polygon_0/one_way = true
+0:0/1/physics_layer_0/polygon_0/one_way_margin = 20.0
+
+[sub_resource type="TileSet" id="TileSet_l8qvf"]
+tile_size = Vector2i(128, 128)
+physics_layer_0/collision_layer = 1
+sources/1 = SubResource("TileSetAtlasSource_y25hu")
+
+[node name="Starting Level" type="Node2D" groups=["Starting Level"]]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+position = Vector2(-256, -512)
+tile_map_data = PackedByteArray("AAACAAQAAQAAAAAAAAADAAQAAQAAAAAAAAAEAAQAAQAAAAAAAAAFAAQAAQAAAAAAAAACAAIAAQAAAAAAAAACAAEAAQAAAAAAAAADAAEAAQAAAAAAAAAEAAEAAQAAAAAAAAAFAAEAAQAAAAAAAAAGAAEAAQAAAAAAAAACAAMAAQAAAAAAAAAGAAQAAQAAAAAAAAAGAAIAAQAAAAAAAAA=")
+tile_set = SubResource("TileSet_l8qvf")
+
+[node name="end" type="Node2D" parent="."]
+position = Vector2(640, 0)

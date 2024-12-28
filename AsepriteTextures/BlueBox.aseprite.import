@@ -1,0 +1,16 @@
+[remap]
+
+importer="aseprite_wizard.plugin.static-texture"
+type="AtlasTexture"
+uid="uid://bwhs6bdlwnbd0"
+path="res://.godot/imported/BlueBox.aseprite-6e02b46efcd00b81e6439d9761e102d6.res"
+
+[deps]
+
+source_file="res://AsepriteTextures/BlueBox.aseprite"
+dest_files=["res://.godot/imported/BlueBox.aseprite-6e02b46efcd00b81e6439d9761e102d6.res"]
+
+[params]
+
+exclude_layers_pattern=""
+only_visible_layers=true

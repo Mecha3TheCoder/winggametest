@@ -4,29 +4,44 @@
 script/source = "extends Control
 
 
+@onready var level_node = get_tree().get_first_node_in_group(\"Level\")
+@onready var old_level = get_tree().get_first_node_in_group(\"Starting Level\")
+@onready var points_label = $Points/RichTextLabel
+@onready var points_timer = $Points/Timer
+
+
 const LEVEL1 = preload(\"res://level.tscn\")
+const LEVEL_1 = preload(\"res://Levels/level_1.tscn\")
+const POINTS_LABEL = \"Points: \"
 
 
 var next_level
 var last_level
-
+var points_count = 0
 
 #signal new_level
 
 
 #func _ready():
-#
-#
+
+
 #func _input(event: InputEvent) -> void:
 	#$Camera2D2.make_current()
 	
 func _enter_tree():
+	
+	#set_multiplayer_authority((name.to_int()))
+	#$Camera2D.enabled = is_multiplayer_authority()
+	
 	set_multiplayer_authority((name.to_int()))
-	$Camera2D2.enabled = is_multiplayer_authority()
+	$Camera2D.enabled = is_multiplayer_authority()
+	
 	if is_multiplayer_authority():
 		$TabContainer.show()
+		$Points.show()
 	else:
 		$TabContainer.hide()
+		$Points.hide()
 
 
 func _input(event: InputEvent) -> void:
@@ -52,8 +67,33 @@ func _physics_process(_delta: float) -> void:
 		pass
 
 
+@rpc(\"any_peer\", \"call_local\")
+func spawn_level(_level):
+	#var new_level = LEVEL1.instantiate()
+	#new_level.global_position = old_level.get_node(\"end\").global_position
+	#level_node.add_child(new_level, true)
+	#old_level = new_level
+	if points_count >= 200:
+		next_level = LEVEL_1.instantiate()
+		next_level.global_position = old_level.get_node(\"end\").global_position
+		level_node.add_child(next_level,true)
+		old_level = next_level
+		add_points(-200)
+	else:
+		pass
+
+
+func add_points(amout_to_add):
+	points_count = points_count + amout_to_add
+	points_label.text = POINTS_LABEL + str(points_count)
+
+
 func _on_button_pressed() -> void:
-	pass # Replace with function body.
+	spawn_level.rpc(LEVEL_1)
+
+
+func _on_timer_timeout() -> void:
+	add_points(100)
 "
 
 [node name="Player2" type="Control"]
@@ -65,7 +105,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = SubResource("GDScript_t0mmb")
 
-[node name="Camera2D2" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="."]
 light_mask = 2
 visibility_layer = 2
 zoom = Vector2(0.5, 0.5)
@@ -79,13 +119,6 @@ offset_bottom = -78.0
 text = "PLAYER TWO WORKED WOOOOOOOOOOOOOOOOOOO"
 fit_content = true
 autowrap_mode = 0
-
-[node name="Container" type="Container" parent="."]
-layout_mode = 0
-offset_left = -1152.0
-offset_top = 338.0
-offset_right = 1152.0
-offset_bottom = 648.0
 
 [node name="TabContainer" type="TabContainer" parent="."]
 light_mask = 0
@@ -127,7 +160,7 @@ light_mask = 0
 visibility_layer = 2
 layout_mode = 2
 theme_override_font_sizes/font_size = 190
-text = "test"
+text = "Test1"
 
 [node name="Button2" type="Button" parent="TabContainer/Control/ScrollContainer/HBoxContainer"]
 light_mask = 0
@@ -176,4 +209,25 @@ visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
+[node name="Points" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -1152.0
+offset_top = -647.0
+offset_right = -1112.0
+offset_bottom = -607.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Points"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 1.0
+offset_right = 950.0
+offset_bottom = 153.0
+theme_override_font_sizes/normal_font_size = 100
+text = "Points: "
+
+[node name="Timer" type="Timer" parent="Points"]
+autostart = true
+
 [connection signal="pressed" from="TabContainer/Control/ScrollContainer/HBoxContainer/Button" to="." method="_on_button_pressed"]
+[connection signal="timeout" from="Points/Timer" to="." method="_on_timer_timeout"]

@@ -15,6 +15,26 @@ run/main_scene="res://game.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Autoloader="*res://Autoloaders/Autoloader.gd"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg")
+
+[global_group]
+
+Level="Level Master Node"
+"Starting Level"="Starting Level for Generation/spawning"
+
+[importer_defaults]
+
+aseprite_wizard.plugin.static-texture={
+"exclude_layers_pattern": "",
+"only_visible_layers": true
+}
+
 [input]
 
 e={

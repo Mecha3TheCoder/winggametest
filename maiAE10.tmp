@@ -1,0 +1,140 @@
+[gd_scene load_steps=6 format=3 uid="uid://cduehqmiukqr1"]
+
+[ext_resource type="Script" path="res://main_menu.gd" id="1_k5dmp"]
+[ext_resource type="Texture2D" uid="uid://cciohflt4pfxd" path="res://AsepriteTextures/RedBox.aseprite" id="2_1int5"]
+[ext_resource type="Texture2D" uid="uid://bwhs6bdlwnbd0" path="res://AsepriteTextures/BlueBox.aseprite" id="3_jbw34"]
+[ext_resource type="Texture2D" uid="uid://g54l172bud04" path="res://AsepriteTextures/GreenBox.aseprite" id="4_p0jtf"]
+[ext_resource type="Texture2D" uid="uid://dlirj1eujadnp" path="res://AsepriteTextures/YellowBox.aseprite" id="5_y1jdj"]
+
+[node name="Main Menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_k5dmp")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 1153.0
+offset_bottom = 650.0
+color = Color(0.29219, 0.29219, 0.29219, 1)
+
+[node name="Start Menu" type="Control" parent="."]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Start Menu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 389.5
+offset_top = -17.0
+offset_right = 722.5
+offset_bottom = 625.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Start Menu/VBoxContainer"]
+layout_mode = 2
+text = "                  ASYNCHRONOUS GAME"
+fit_content = true
+
+[node name="Button" type="Button" parent="Start Menu/VBoxContainer"]
+layout_mode = 2
+text = "Play"
+
+[node name="Button2" type="Button" parent="Start Menu/VBoxContainer"]
+layout_mode = 2
+text = "Play2"
+
+[node name="Wait Screen" type="Control" parent="."]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect" type="ColorRect" parent="Wait Screen"]
+layout_mode = 0
+offset_right = 1159.0
+offset_bottom = 652.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Wait Screen"]
+layout_mode = 0
+offset_left = 308.0
+offset_top = 190.0
+offset_right = 849.0
+offset_bottom = 339.0
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+text = "Please wait for second player."
+fit_content = true
+
+[node name="Select Menu" type="Control" parent="."]
+visible = false
+anchors_preset = 0
+offset_right = 1151.0
+offset_bottom = 648.0
+
+[node name="ColorRect" type="ColorRect" parent="Select Menu"]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 649.0
+color = Color(0, 0, 0, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Select Menu"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -147.0
+offset_right = 1152.0
+offset_bottom = 160.0
+grow_vertical = 2
+
+[node name="HBoxMaster" type="HBoxContainer" parent="Select Menu/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureButtonT" type="TextureButton" parent="Select Menu/VBoxContainer/HBoxMaster"]
+layout_mode = 2
+texture_normal = ExtResource("2_1int5")
+
+[node name="HBoxPlayer" type="HBoxContainer" parent="Select Menu/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureButtonB" type="TextureButton" parent="Select Menu/VBoxContainer/HBoxPlayer"]
+layout_mode = 2
+texture_normal = ExtResource("3_jbw34")
+
+[node name="Sprite2D" type="Sprite2D" parent="Select Menu"]
+position = Vector2(47, 47)
+scale = Vector2(0.703125, 0.703125)
+texture = ExtResource("2_1int5")
+
+[node name="Sprite2D2" type="Sprite2D" parent="Select Menu"]
+position = Vector2(1107, 47)
+scale = Vector2(0.703125, 0.703125)
+texture = ExtResource("3_jbw34")
+
+[node name="TextureButton" type="TextureButton" parent="Select Menu"]
+layout_mode = 0
+offset_left = 432.0
+offset_top = 524.0
+offset_right = 688.0
+offset_bottom = 648.0
+disabled = true
+texture_normal = ExtResource("4_p0jtf")
+texture_disabled = ExtResource("5_y1jdj")
+stretch_mode = 1
+
+[connection signal="pressed" from="Start Menu/VBoxContainer/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="Start Menu/VBoxContainer/Button2" to="." method="_on_button_2_pressed"]
+[connection signal="pressed" from="Select Menu/VBoxContainer/HBoxMaster/TextureButtonT" to="." method="_on_texture_button_t_pressed"]
+[connection signal="pressed" from="Select Menu/VBoxContainer/HBoxPlayer/TextureButtonB" to="." method="_on_texture_button_b_pressed"]

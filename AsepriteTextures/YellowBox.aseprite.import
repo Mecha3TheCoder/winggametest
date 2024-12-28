@@ -1,0 +1,16 @@
+[remap]
+
+importer="aseprite_wizard.plugin.static-texture"
+type="AtlasTexture"
+uid="uid://dlirj1eujadnp"
+path="res://.godot/imported/YellowBox.aseprite-bc47d893a669aae8b59cea690a109cd1.res"
+
+[deps]
+
+source_file="res://AsepriteTextures/YellowBox.aseprite"
+dest_files=["res://.godot/imported/YellowBox.aseprite-bc47d893a669aae8b59cea690a109cd1.res"]
+
+[params]
+
+exclude_layers_pattern=""
+only_visible_layers=true

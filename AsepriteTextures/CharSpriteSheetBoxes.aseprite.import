@@ -1,0 +1,16 @@
+[remap]
+
+importer="aseprite_wizard.plugin.static-texture"
+type="AtlasTexture"
+uid="uid://ds0jw7xs0atlp"
+path="res://.godot/imported/CharSpriteSheetBoxes.aseprite-362225440b5eab58a1b68a12841022d8.res"
+
+[deps]
+
+source_file="res://AsepriteTextures/CharSpriteSheetBoxes.aseprite"
+dest_files=["res://.godot/imported/CharSpriteSheetBoxes.aseprite-362225440b5eab58a1b68a12841022d8.res"]
+
+[params]
+
+exclude_layers_pattern=""
+only_visible_layers=true
